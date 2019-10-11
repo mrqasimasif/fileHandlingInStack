@@ -14,6 +14,8 @@ class cPriorityQueue : public cQueue{
 public:
     /*
     Default and Parameterized constructor of cPriorityQueue class
+    We have used the the parameterized constructor so the system defined NULL constructor doesn't work
+    We defined a NULL constructor too
     */
     cPriorityQueue(cStack *&stackRef): cQueue( stackRef ) {}
     cPriorityQueue() {}
@@ -37,7 +39,7 @@ public:
             }
             return *this;
         }
-    }
+    }  
 
     /*
     copy consturctor of cPriorityQueue class
