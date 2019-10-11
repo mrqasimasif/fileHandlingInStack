@@ -24,6 +24,7 @@ public:
 	*/
 	cStack(cNode *&topPtr) : topRef(topPtr) { topRef->nextNode = NULL; topRef = NULL; }
 
+    //cStack constructor to input nodes from file 
     cStack(ifstream &inFile) : topRef(NULL), count(0) { 
         int size; 
         inFile.read((char*)this, sizeof(*this));
@@ -39,6 +40,7 @@ public:
         }
     } 
 
+    //Member function to write cStack nodes to file
     void writrToFile(ofstream &oFile) {
         oFile.write((char*)this->count, sizeof(count));
         if(count > 0) {
@@ -50,6 +52,7 @@ public:
         }
     }
 
+    //Member function to read input nodes from file
     void readFromFile(ifstream &inFile) {
         if(true){
             cStack temp;
@@ -64,7 +67,7 @@ public:
                 nodeRef->nextNode = new cNode (inFile);
                 nodeRef = nodeRef->nextNode;
             }
-            nodeRef->nextNode = NULL;
+            nodeRef->nextNode = NULL; 
         }
     }
 
@@ -80,9 +83,7 @@ public:
 	*/
 	cStack& push(cNode *&nodeRef) { nodeRef->nextNode = topRef; topRef = nodeRef; nodeRef = NULL; return *this; }
 
-	/*
-	To extract the first node element of the STACK
-	*/
+	//To extract the first node element of the STACK
 	cNode* pop() { cNode *nodeRef = topRef; topRef = topRef->nextNode; nodeRef->nextNode = NULL; return nodeRef; }
 
 	//print function to print the whole stack from top to bottom order
