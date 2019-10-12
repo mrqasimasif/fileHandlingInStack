@@ -54,7 +54,7 @@ public:
             sptr = topRef->nextNode;
             
             while(sptr){
-                dptr = new cNode (sptr);
+                dptr = new cNode (*sptr);
                 dptr = dptr->nextNode;
                 sptr = sptr->nextNode;
             }
