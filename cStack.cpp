@@ -10,66 +10,76 @@ class cStack {
 	//The dynamic memory location that is going to serve as the BASE REFERENCE to the whole STACK
 protected:
 	cNode *topRef;
-    int count;
+	int count;
 public:
 	/*
 	Default Class Construstor
 	Using Initializer list to set the topReference as NULL for the empty STACK
 	*/
-	cStack() : topRef(NULL) {}
+	cStack() : topRef(NULL) { count = 0; }
 
 	/*
 	Parameterized Class Constructor
 	Generating a single node stack using pointer Reference to avoid multiple pointer to same node
 	*/
-	cStack(cNode *&topPtr) : topRef(topPtr) { topRef->nextNode = NULL; topRef = NULL; }
+	cStack(cNode *&topPtr) : topRef(topPtr) { topRef->nextNode = NULL; topRef = NULL; count = 1; }
 
-    //cStack constructor to input nodes from file 
-    cStack(ifstream &inFile) : topRef(NULL), count(0) { 
-        int size; 
-        inFile.read((char*)this, sizeof(*this));
-        if(size > 0) {
-            cNode *rptr;
-            rptr = topRef = new cNode (inFile);
-            count = size;
-            for( int i=0 ; i < count; ++i) {
-                rptr->nextNode = new cNode (inFile);
-                rptr =  rptr->nextNode;
-            }
-            rptr->nextNode = NULL;
-        }
-    } 
+	//cStack constructor to input nodes from file 
+	cStack(ifstream &inFile) : topRef(NULL), count(0) {
+		int size;
+		inFile.read((char*)this, sizeof(*this));
+		if (size > 0) {
+			cNode *rptr;
+			rptr = topRef = new cNode(inFile);
+			count = size;
+			for (int i = 0; i < count; ++i) {
+				rptr->nextNode = new cNode(inFile);
+				rptr = rptr->nextNode;
+			}
+			rptr->nextNode = NULL;
+		}
+	}
 
-    //Member function to write cStack nodes to file
-    void writrToFile(ofstream &oFile) {
-        oFile.write((char*)this->count, sizeof(count));
-        if(count > 0) {
-            cNode *rptr = topRef;
-            for( int i=1 ; i<count ; ++i) {
-                rptr->writeToFile(oFile);
-                rptr = rptr->nextNode;
-            }
-        }
-    }
+	//Member function to write cStack nodes to file
+	void writeStackToFile(ofstream &oFile) {
+		if (!(oFile.is_open())) {
+			cout << "File is not opened !" << endl;
+		}
+		else {
+			oFile.write((char*)&count, sizeof(count));
 
-    //Member function to read input nodes from file
-    void readFromFile(ifstream &inFile) {
-        if(true){
-            cStack temp;
-            temp.topRef = this->topRef;
-        }
+			if (count > 0) {
+				cNode *rptr = topRef;
+				for (int i = 0; i < count; ++i) {
+					rptr->writeNodeToFile(oFile);
+					rptr = rptr->nextNode;
+				}
+			}
+		}
+	}
 
-        inFile.read((char*)&count, sizeof(count));
-        if(count > 0) {
-            cNode *nodeRef;
-            nodeRef = topRef = new cNode(inFile);
-            for( int i=1 ; i<count ; ++i) {
-                nodeRef->nextNode = new cNode (inFile);
-                nodeRef = nodeRef->nextNode;
-            }
-            nodeRef->nextNode = NULL; 
-        }
-    }
+	//Member function to read input nodes from file
+	void readFromFile(ifstream &inFile) {
+
+		if (true) {
+			cStack temp;
+			temp.topRef = this->topRef;
+		}
+
+		inFile.read((char*)&count, sizeof(count));
+		cout << "count = " << count << endl;
+
+		if (count > 0) {
+			cNode *nodeRef;
+			nodeRef = topRef = new cNode(inFile);
+			
+			for (int i = 1; i < count; ++i) {
+				nodeRef->nextNode = new cNode(inFile);
+				nodeRef = nodeRef->nextNode;
+			}
+			nodeRef->nextNode = NULL;
+		}
+	}
 
 	/*
 	Check the BASE REFERENCE to determin whether the STACK is empty or not
@@ -81,10 +91,10 @@ public:
 	Push a node at the end of the STACK using previousLastNode Next Reference to New node
 	Returning Reference will allow cascadeability use
 	*/
-	cStack& push(cNode *&nodeRef) { nodeRef->nextNode = topRef; topRef = nodeRef; nodeRef = NULL; return *this; }
+	cStack& push(cNode *&nodeRef) { nodeRef->nextNode = topRef; topRef = nodeRef; nodeRef = NULL; ++count; return *this; }
 
 	//To extract the first node element of the STACK
-	cNode* pop() { cNode *nodeRef = topRef; topRef = topRef->nextNode; nodeRef->nextNode = NULL; return nodeRef; }
+	cNode* pop() { cNode *nodeRef = topRef; topRef = topRef->nextNode; nodeRef->nextNode = NULL; --count; return nodeRef; }
 
 	//print function to print the whole stack from top to bottom order
 	void printStack() const {
@@ -108,6 +118,7 @@ public:
 	*/
 	cStack(const cStack &src) {
 		this->topRef = src.topRef;
+		this->count = src.count;
 		if (src.topRef) {
 			cNode *sptr, *dptr;
 			dptr = topRef = new cNode(*src.topRef);
@@ -132,7 +143,7 @@ public:
 
 
 	/*
-	Default desstructor wouldn't delete the stack allocated on HEAP so the self defined deletes all nodes in STACK
+	Default destructor wouldn't delete the stack allocated on HEAP so the self defined deletes all nodes in STACK
 	*/
 	~cStack() {
 		cNode *nodeRef = topRef;
