@@ -1,5 +1,5 @@
 /*
-Self Referential Node Class decleration and definition that are going to serve as our basic building blocks 
+Self Referential Node Class decleration and definition that are going to serve as our basic building blocks
 for all other data structures
 */
 #include<iostream>
@@ -21,15 +21,15 @@ public:
 	cNode() { this->data = -1; }
 	cNode(int number) { this->data = number; }
 
-    //Class constructor for imput from File
-    cNode(ifstream &inFile) { inFile.read((char*)this, sizeof(*this)); }
+	//Class constructor for imput from File
+	cNode(ifstream &inFile) { inFile.read((char*)this, sizeof(this)); }
 
-    //Member function for input from File
-    cNode readFromFile(ifstream &inFile) { inFile.read((char*)this, sizeof(*this)); }
+	//Member function for input from File
+	cNode readNodeFromFile(ifstream &inFile) { inFile.read((char*)this, sizeof(this)); }
 
-    //Memeber function for wrirting output to File
-    cNode writeToFile(ofstream &oFile) { oFile.write((char*)this, sizeof(*this)); }
-    
+	//Memeber function for wrirting output to File
+	void writeNodeToFile(ofstream &oFile) { oFile.write((char*)this, sizeof(this)); }
+
 	//Class Getter
 	int getData() { return data; }
 
