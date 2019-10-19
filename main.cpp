@@ -1,46 +1,69 @@
 #include<iostream>
+#include<fstream>
 #include"nodeClass.cpp"
-#include"cQueue.cpp"
+#include"cStack.cpp"
+
 
 using namespace std;
 
 int main() {
-	cQueue que;
-	que.printQueue();
+	cStack stack;
+	stack.printStack();
 
 	// Declaring node pointers Array and declaring dynamic nodes 
-	cNode *n[5];
+	cNode *n[3];
 	n[0] = new cNode(10);
 	n[1] = new cNode(20);
 	n[2] = new cNode(30);
-	n[3] = new cNode(40);
-	n[4] = new cNode(50);
 
-	// Adding 5 nodes to queue in a seuence from n[1-1] to n[5-1]
+	// Adding 5 nodes to queue in a seuence from n[1-1] to n[3-1]
 	// The nodes are added as first node added first.
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		que.add(n[i]);
-	}
-	que.printQueue();
-
-	// Now retriving the nodes back from the queue 
-	// They are retrived in an order "The first Entered will be retrived first"
-	for (int i = 0; i < 5; i++) {
-		cNode *temp;
-		temp = que.remove();
-		cout << "The retrieved node elelemt is " << temp->getData()<<endl;
-		que.printQueue();
-		cout << endl;
-		delete temp;
+		stack.push(n[i]);
+		delete n[i];
 	}
 
+	stack.printStack();
+	//Opeing file for write operation
+	ofstream outFile;
+	outFile.open("G:/uniBooksAndAssignments/3rdSemester/assignments/dsaTheory/fileHandlingInQueue/data.bin");
+	
+	if (outFile.is_open()) {
+		cout << "\nStarted writing to file !" << endl;
+		stack.writeStackToFile(outFile);
+		cout << "Done writing to file !" << endl;
+	}
+	else {
+		cout << "File not opened for writing !" << endl;
+	}
+	
+	outFile.close();
 	/*
-	This example clearly describes the basic working of a basic Queue Data Strusture
+	This example clearly describes the basic working of a basic Stack Data Strusture
 	*/
+
+	ifstream inFile;
+	inFile.open("G:/uniBooksAndAssignments/3rdSemester/assignments/dsaTheory/fileHandlingInQueue/data.bin");
+	cStack stack1;
+
+	if (inFile.is_open()) {
+		cout << "\nReading data of Stack1 from file data.bin !" << endl;
+		stack1.readFromFile(inFile);
+		cout << "Done Reading from file !\n";
+	}
+	else {
+		cout << "The file is not opened for the Read operation !" << endl;
+	}
+
+	cout << "Printing stack object Read from file" << endl;
+	stack1.printStack();
+
+	inFile.close();
+
+
 	system("pause");
 	return 0;
-	
+
 
 }
- 
